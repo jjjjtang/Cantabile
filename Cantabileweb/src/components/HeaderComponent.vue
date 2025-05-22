@@ -1,9 +1,24 @@
 <script setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
+import AIView from "@/views/AIView.vue";
+
+import { reactive, toRefs } from 'vue'
+
+const state = reactive({
+  fits: [
+    'fill',
+    'contain',
+    'cover',
+    'none',
+    'scale-down',
+  ],
+  url: 'C:\\Users\\lenovo\\Desktop\\files\\Cantabile\\Cantabileweb\\public\\zzy\\IMG_1054.GIF',
+})
 
 const inputText = ref('')  // 使用 ref 创建响应式数据
+let dialogVisible = ref(false)
 
 const handleMenuSelect = (key) => {
   switch (key) {
@@ -14,7 +29,7 @@ const handleMenuSelect = (key) => {
       ElMessage.info('点击了：音乐歌单')
       break
     case '3':
-      ElMessage.warning('点击了：AI音乐小助手')
+      ElMessage.info('点击了：AI音乐小助手')
       break
     case '4':
       ElMessage.info('点击了：社区交流')
@@ -88,7 +103,7 @@ const handleSearch = () => {
           >
             <el-menu-item index="1">个人资料</el-menu-item>
             <el-menu-item index="2">音乐歌单</el-menu-item>
-            <el-menu-item index="3">AI音乐小助手</el-menu-item>
+            <el-menu-item index="3" @click="dialogVisible=true">梨梨喵~小助手</el-menu-item>
             <el-menu-item index="4">社区交流</el-menu-item>
             <el-menu-item index="5">注册</el-menu-item>
             <el-menu-item index="6">退出登录</el-menu-item>
@@ -97,6 +112,25 @@ const handleSearch = () => {
       </div>
     </div>
   </div>
+
+  <el-dialog
+      v-model="dialogVisible"
+      width="800px"
+  >
+
+    <div style="display: flex">
+
+      <img id="img" src="C:\Users\lenovo\Desktop\files\Cantabile\Cantabileweb\public\zzy\IMG_1054.GIF">
+      <div style="font-size: 26px; color: #da98b9; font-weight: bold;margin-top: 15px;margin-left: 150px">小猫梨梨</div>
+      <div style="font-size: 22px; color: #da98b9; font-weight: bold;margin-top: 17px;margin-left: 30px">=＾● ⋏ ●＾=</div>
+
+
+    </div>
+
+
+    <AIView></AIView>
+
+  </el-dialog>
 </template>
 
 <style scoped>
@@ -130,5 +164,11 @@ const handleSearch = () => {
 .el-menu-vertical-demo .el-menu-item {
   padding-left: 10px;
   font-size: 14px;
+}
+#img{
+  width: 70px;
+  height: 80px;
+  object-fit: contain;
+  margin-left: 20px;
 }
 </style>

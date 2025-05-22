@@ -6,14 +6,9 @@
 
       <div id="cards-wrapper">
         <div class="card">
-          <el-carousel indicator-position="outside" height="440px"style="width: 500px;"
-          >
-            <el-carousel-item v-for="item in 4" :key="item">
-              <img
-                  src="/Album/R.png"
-                  alt="Blackpink Album"
-                  class="carousel-image"
-              />
+          <el-carousel indicator-position="outside" height="440px" style="width: 500px;">
+            <el-carousel-item v-for="(image, index) in images" :key="index">
+              <img :src="image" alt="Blackpink Album" class="carousel-image" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -37,17 +32,33 @@
       <song-card></song-card>
       <song-card></song-card>
       <song-card></song-card>
+      <song-card></song-card>
 
     </div>
 
   </div>
+
+
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import SongCard from "@/components/SongCard.vue";
-const input = ref('')
+import {ElMessageBox} from "element-plus";
+
+
+const images = ref([
+  '/Album/R.png',
+  '/zzy/zzzy.png',
+  '/zzy/zzytz.png',
+  '/zzy/syz.png'
+])
+
+
+
+//opendialog function
+
 </script>
 
 <style scoped>
