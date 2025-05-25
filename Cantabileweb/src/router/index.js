@@ -9,6 +9,17 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/person',
+      name: 'homepage',
+      component: () => import('../views/PersonalView.vue'),
+    },
+    {
+      path: '/community',
+      name: 'community',
+      component: () => import('../views/CommunityView.vue'),
+    },
+
 
   ],
 })

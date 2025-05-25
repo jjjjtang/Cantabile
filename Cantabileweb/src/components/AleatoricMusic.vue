@@ -13,7 +13,14 @@
           </el-carousel>
         </div>
 
+        <ArtistComponent></ArtistComponent>
+        <MusicListComponent></MusicListComponent>
+
+
     </div>
+
+
+
     <div class="textContainer">
       热门歌曲
     </div>
@@ -23,6 +30,7 @@
       <song-card></song-card>
       <song-card></song-card>
 
+      <song-card></song-card>
 
     </div>
     <div class="textContainer">
@@ -33,6 +41,8 @@
       <song-card></song-card>
       <song-card></song-card>
       <song-card></song-card>
+      <song-card></song-card>
+
 
     </div>
 
@@ -46,13 +56,14 @@ import { ref } from 'vue'
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import SongCard from "@/components/SongCard.vue";
 import {ElMessageBox} from "element-plus";
+import ArtistComponent from "@/components/ArtistComponent.vue";
+import MusicListComponent from "@/components/MusicListComponent.vue";
 
 
 const images = ref([
   '/Album/R.png',
-  '/zzy/zzzy.png',
   '/zzy/zzytz.png',
-  '/zzy/syz.png'
+
 ])
 
 
@@ -79,8 +90,8 @@ const images = ref([
   gap: 24px;
 }
 .card {
-  width: 550px;
-  height: 450px;
+  width: 600px;
+  height: 500px;
   background-color: #f6c9e3;
   border-radius: 5px;
   display: flex;
@@ -98,22 +109,7 @@ const images = ref([
   object-fit: cover;
   border-radius: 12px;
 }
-.albumtext-container {
-  font-size: 14px;
-  color: #010b21;
-  font-weight: bold;
-  text-align: center;
-}
-#list-panel {
-  width: 300px;
-  min-height: 400px;
-  background-color: #f3d6e1;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-  margin-left: 40px;
-}
+
 #list-panel h2 {
   font-size: 18px;
   color: #da5898;
@@ -147,5 +143,10 @@ const images = ref([
   font-weight: bold;
   margin-top: 25px;
 }
-
+.carousel-image{
+  width: 600px;
+  height: 440px;
+  object-fit: cover;
+  border-radius: 8px;
+}
 </style>

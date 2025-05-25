@@ -78,10 +78,6 @@ const sendMessage = async () => {
 </template>
 
 <style scoped>
-#Container {
-
-}
-
 #container {
   width: 650px;
   height: 500px;
@@ -156,7 +152,7 @@ const sendMessage = async () => {
 #sendButton {
   width: 100%;
   height: 44px;
-  background-color: #ec92f1;
+  background-color: #efb1f3;
   color: white;
   font-size: 16px;
   border: none;
@@ -167,6 +163,6 @@ const sendMessage = async () => {
 }
 
 #sendButton:hover {
-  background-color: #ec6ef3;
+  background-color: #ec95f1;
 }
 </style>

@@ -3,6 +3,7 @@
 import MusicPlayer from "@/components/MusicPlayer.vue";
 import AleatoricMusic from "@/components/AleatoricMusic.vue";
 import MusicPlayerTwo from "@/components/MusicPlayerTwo.vue";
+import LoginComponent from "@/components/LoginComponent.vue";
 </script>
 
 <template>
