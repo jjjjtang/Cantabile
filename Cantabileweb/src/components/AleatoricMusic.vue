@@ -8,7 +8,7 @@
         <div class="card">
           <el-carousel indicator-position="outside" height="440px" style="width: 500px;">
             <el-carousel-item v-for="(image, index) in images" :key="index">
-              <img :src="image" alt="Blackpink Album" class="carousel-image" />
+              <img :src="image" alt="Album" class="carousel-image" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -62,6 +62,8 @@ import MusicListComponent from "@/components/MusicListComponent.vue";
 
 const images = ref([
   '/Album/R.png',
+    '/Album/Allofme.png',
+    '/Album/Liew.png',
   '/zzy/zzytz.png',
 
 ])
@@ -90,9 +92,9 @@ const images = ref([
   gap: 24px;
 }
 .card {
-  width: 600px;
-  height: 500px;
-  background-color: #f6c9e3;
+  width: 550px;
+  height: 490px;
+  background-color: rgba(246, 201, 227, 0.86);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
