@@ -53,20 +53,19 @@ const handleSearch = () => {
   }
 }
 
-const doSearch = (keyword) => {
-  setTimeout(() => {
-    searchResults.value = [
-      {id: 1, name: '春日旋律', artist: '某倩猪'},
-      {id: 2, name: '梦中的歌谣', artist: '梨梨喵'},
-      {id: 3, name: '粉色海岸', artist: 'Cantabile'},
-    ].filter(item => item.name.includes(keyword) || item.artist.includes(keyword))
 
+const doSearch = async (keyword) => {
+  try {
+    const res = await axios.get(`http://localhost:8081/api/searchMusics?keyword=${encodeURIComponent(keyword)}`)
+    console.log(res)
+    searchResults.value = res.data
     if (searchResults.value.length === 0) {
       ElMessage.info('未找到相关音乐')
     }
-  }, 300)
+  } catch (error) {
+    ElMessage.error('搜索失败，请稍后重试')
+  }
 }
-
 const logout = () => {
   document.cookie = "jwt1=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/"
   router.currentRoute.value.name === 'home' ? window.location.reload() : router.push({name: 'home'})
@@ -100,6 +99,7 @@ const go2Community = () => router.push({name: 'community'})
 onMounted(() => {
   fetchUserInfo()
 })
+
 </script>
 
 <template>
@@ -120,8 +120,9 @@ onMounted(() => {
       </div>
 
       <div id="welcomeContainer">
-        <h1>(｡･∀･)ﾉﾞ嗨，欢迎来到Cantabile</h1>
+        <h1 class="animated-text">(｡･∀･)ﾉﾞ嗨，欢迎来到Cantabile</h1>
       </div>
+
     </div>
 
     <div id="personContainer">
@@ -168,24 +169,30 @@ onMounted(() => {
 
   <el-dialog v-model="searchDialogVisible" fullscreen custom-class="search-music-dialog" show-close>
     <div class="header">
-      <div>搜索结果：<span style="color:#f06292">{{ inputText }}</span></div>
+      <div>梨梨喵为你找到以下音乐喵~ 🎵 搜索关键词：<span style="color:rgba(238,139,172,0.84)">{{ inputText }}</span></div>
       <el-button type="text" @click="searchDialogVisible = false" style="color:#f180a6">关闭 ✕</el-button>
     </div>
 
-    <div class="result-list" v-if="searchResults.length > 0">
+    <div v-if="searchResults.length > 0" class="result-list">
       <div
           v-for="item in searchResults"
           :key="item.id"
           class="result-item"
       >
-        <div class="song-name">{{ item.name }}</div>
-        <div class="artist-name">{{ item.artist }}</div>
-        <el-button size="small" type="primary" @click="ElMessage.success(`播放：${item.name}`)">播放</el-button>
+        <div>
+          <div class="song-name">🎵 歌曲：《{{ item.title }}》</div>
+          <div class="artist-name">👤 演唱：{{ item.artist }}</div>
+        </div>
+        <el-button size="small" type="primary" @click="ElMessage.success(`正在播放：${item.name}`)">立即播放</el-button>
       </div>
     </div>
 
-    <div v-else class="no-results">暂无搜索结果哦~</div>
+    <div v-else class="no-results">
+      <img src="/zzy/IMG_1054.GIF" style="width: 100px; height: auto;" />
+      <div style="margin-top: 20px;">喵呜~没有找到相关的歌曲呢，请换个关键词试试看吧！</div>
+    </div>
   </el-dialog>
+
 </template>
 
 <style scoped>
@@ -266,18 +273,33 @@ onMounted(() => {
 .song-name {
   font-size: 16px;
   font-weight: 600;
-  color: #d81b60;
+  color: rgba(9, 0, 0, 0.94);
 }
 
 .artist-name {
   font-size: 14px;
-  color: #f06292;
+  color: rgba(9, 0, 0, 0.97);
 }
 
 .no-results {
   text-align: center;
   font-size: 18px;
-  color: #f48fb1;
+  color: rgba(9, 0, 0, 0.96);
   padding: 50px;
 }
+.animated-text {
+  display: inline-block;
+  animation: jump 1s ease-in-out infinite;
+  color: #bd4d83;
+}
+
+@keyframes jump {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 </style>

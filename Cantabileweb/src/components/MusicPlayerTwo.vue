@@ -67,21 +67,31 @@
       <div id="stopTime">{{ formatTime(duration) }}</div>
     </div>
 
-    <!-- 播放列表弹窗 -->
     <el-dialog v-model="showPlaylist" title="播放列表" width="30%">
       <el-scrollbar height="200px">
         <ul class="playlist">
           <li
               v-for="(track, index) in playlist"
               :key="index"
-              @click="selectTrack(index)"
               :class="{ active: index === currentIndex }"
+              class="flex justify-between items-center"
           >
-            {{ track.title }} - {{ track.artist }}
+        <span @click="selectTrack(index)" class="cursor-pointer flex-1">
+          {{ track.title }} - {{ track.artist }}
+        </span>
+            <el-button
+                type="danger"
+                circle
+                size="small"
+                @click.stop="removeTrack(index)"
+                style="float: right"
+            />
+
           </li>
         </ul>
       </el-scrollbar>
     </el-dialog>
+
 
     <!-- 隐藏音频元素 -->
     <audio
@@ -90,12 +100,17 @@
         @timeupdate="updateProgress"
         @ended="onEnded"
     />
+
   </el-container>
 </template>
 
-<script setup>
-import { ref, computed, watch } from 'vue'
+<script lang="ts" setup>
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { VideoPause, VideoPlay } from '@element-plus/icons-vue'
+import emitter from "@/utils/eventBus.js"
+import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
+
+
 
 const audio = ref(null)
 const isPlaying = ref(false)
@@ -105,13 +120,11 @@ const currentTime = ref(0)
 const duration = ref(0)
 const showPlaylist = ref(false)
 
-const playlist = [
-  { title: '夜曲', artist: '周杰伦', src: '/music/music.mp3', cover: '/music/cover1.jpg' },
-  { title: '告白气球', artist: '周杰伦', src: '/music/music.mp3', cover: '/music/cover2.jpg' },
-  { title: '夜空中最亮的星', artist: '逃跑计划', src: '/music/music.mp3', cover: '/music/cover3.jpg' }
-]
+const playlist = ref([
+  { title: '夜曲', artist: '周杰伦', src: '/music/music.mp3', cover: 'music/music/Cover/夜曲.png' },
+])
 
-const currentTrack = computed(() => playlist[currentIndex.value])
+const currentTrack = computed(() => playlist.value[currentIndex.value])
 
 const togglePlay = () => {
   if (!audio.value) return
@@ -120,7 +133,7 @@ const togglePlay = () => {
 }
 
 const nextTrack = () => {
-  if (currentIndex.value < playlist.length - 1) {
+  if (currentIndex.value < playlist.value.length - 1) {
     currentIndex.value++
     playCurrent()
   }
@@ -134,12 +147,28 @@ const prevTrack = () => {
 }
 
 const playCurrent = () => {
-  isPlaying.value = false
-  audio.value.load()
-  audio.value.play()
-  isPlaying.value = true
-  progress.value = 0
-}
+  isPlaying.value = false;
+
+  // 移除旧的事件监听器（防止多次绑定）
+  audio.value.oncanplay = null;
+
+  console.log("playCurrent", currentTrack.value)
+
+  // 等待 canplay 后再播放
+  audio.value.oncanplay = async () => {
+    try {
+      await audio.value.play();
+      isPlaying.value = true;
+      progress.value = 0;
+    } catch (err) {
+      console.error('播放失败:', err);
+    }
+  };
+
+  // 触发 src 的重新加载（其实是 computed currentTrack.src 已变化）
+  audio.value.load();  // 强制重新加载新音频资源
+};
+
 
 const selectTrack = (index) => {
   currentIndex.value = index
@@ -148,7 +177,7 @@ const selectTrack = (index) => {
 }
 
 const onEnded = () => {
-  if (currentIndex.value < playlist.length - 1) {
+  if (currentIndex.value < playlist.value.length - 1) {
     currentIndex.value++
     playCurrent()
   } else {
@@ -181,7 +210,54 @@ const formatTime = (seconds) => {
 watch(currentIndex, () => {
   if (isPlaying.value) playCurrent()
 })
+
+// ✅ 接收歌曲播放事件并更新播放列表
+const handleSong = (payload) => {
+  const existingIndex = playlist.value.findIndex(p => p.title === payload.title && p.artist === payload.artist)
+  if (existingIndex !== -1) {
+    currentIndex.value = existingIndex
+  } else {
+    playlist.value.push(payload)
+    currentIndex.value = playlist.value.length - 1
+  }
+  playCurrent()
+}
+
+onMounted(() => {
+  emitter.on('playSong', handleSong)
+})
+
+onUnmounted(() => {
+  emitter.off('playSong', handleSong)
+})
+
+const removeTrack = (index) => {
+  if (index === currentIndex.value) {
+    // 如果删除的是当前播放的曲目
+    if (playlist.value.length === 1) {
+      // 只剩一首，清空播放
+      playlist.value = []
+      currentIndex.value = 0
+      isPlaying.value = false
+      audio.value.pause()
+    } else {
+      // 播放下一首或上一首
+      if (index === playlist.value.length - 1) {
+        currentIndex.value--
+      }
+      playlist.value.splice(index, 1)
+      playCurrent()
+    }
+  } else {
+    if (index < currentIndex.value) {
+      currentIndex.value--
+    }
+    playlist.value.splice(index, 1)
+  }
+}
+
 </script>
+
 
 <style scoped>
 #silderContainer {
