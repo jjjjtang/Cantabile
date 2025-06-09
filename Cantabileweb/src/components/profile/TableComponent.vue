@@ -39,13 +39,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
 // 表格数据（来自后端）
 const tableData = ref([
-  { date: '2016-05-03', name: 'Tom', liked: false },
-  { date: '2016-05-02', name: 'Tom', liked: true },
-  { date: '2016-05-04', name: 'Tom', liked: false },
-  { date: '2016-05-01', name: 'Tom', liked: false }
+  { date: '凉凉', name: '杨宗纬&张碧晨', liked: true },
+  { date: 'Melody', name: '陶喆', liked: true },
+  { date: 'Bad Girl', name: '吴亦凡', liked: true },
+  { date: '全是爱', name: '凤凰传奇', liked: true }
 ])
 
 // 当前悬停的行索引
